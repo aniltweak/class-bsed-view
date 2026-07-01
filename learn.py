@@ -317,3 +317,431 @@ c = Car()
 c.drive()
 # Engine started
 # Car is moving
+
+
+
+#####
+import copy
+
+orginalData = [1,2,3]
+copiedData = copy.copy(orginalData)
+
+copiedData[0] = 99
+print("orginalData", orginalData)
+print("copiedData", copiedData)
+
+# copyDeep = copy.deepcopy(orginalData)
+
+# print(orginalData)
+# print(copiedData)
+# print("deepcopy", copyDeep)
+
+#import copy
+
+original = [[1, 2], [3, 4]]
+shallow = copy.copy(original)
+
+shallow[0][0] = 99  # Modify INNER element
+
+print("Original:", original)  # [[99, 2], [3, 4]]
+print("Shallow:", shallow)    # [[99, 2], [3, 4]]
+
+######
+
+
+class Test:
+    
+    def __init__(self, Clientname, age):
+        self.Clientname = Clientname
+        self.age = age
+        print(Clientname, age)
+        
+    def get_name_age(self):
+        print(self.Clientname, self.age)
+        
+    def update_details(self):
+        print(self.Clientname, self.age)
+        
+testobj = Test("maha rana prathap", 32)
+testobj.get_name_age()
+testobj.update_details()
+
+class AreaCircumference:
+    pi = 3.14
+    def __init__(self, radius):
+        self.radius = radius
+    
+    def cal_area(self):
+        result = AreaCircumference.pi * self.radius**2         
+        return result
+    
+    def circumference(self):
+        result = 2 * AreaCircumference.pi * self.radius
+        return result
+
+objarecir = AreaCircumference(5)
+print(objarecir.pi)
+objarecir.cal_area()
+print("02", objarecir.cal_area())
+objarecir.circumference()
+print("03", objarecir.cal_area())
+        
+## encapsulation  = hiding internal details accesing through methods
+#Encapsulation is hiding an object’s data and allowing it to be accessed or
+# changed only through controlled methods/properties (so the data stays safe and valid).
+class ClassMarks:    
+    def __init__(self, name, marks):
+        self.name = name
+        self.__marks = marks
+        
+    def get_result(self, total):
+        if total > self.__marks:
+            print(f'{self.name} and {self.__marks} are less than total')
+    
+    def get_marks(self):
+        print(self.__marks)
+ 
+objclasmark = ClassMarks("solar", 99)
+print(objclasmark.name)
+#print(objclasmark.__marks)  # we will get error[not avialable] due to it is private only called in side class 
+objclasmark.get_result(100)
+objclasmark.get_marks()
+
+class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self._salary = 0
+        self.salary = salary  # uses the setter below
+
+    @property
+    def salary(self):
+        return self._salary
+
+    @salary.setter
+    def salary(self, value):
+        if value < 0:
+            raise ValueError("Salary cannot be negative")
+        self._salary = value
+
+
+e = Employee("Anil", 50000)
+print(e.salary)     # OK (getter)
+e.salary = 60000    # OK (setter with validation)
+# e.salary = -10    # ValueError
+
+#decorator in python is a function that given extra behaviour to another function
+# decorator in Python is a function that adds extra behavior to another function (or method) 
+# without changing its original code.
+#It “wraps” the function and runs code before/after (or modifies) it.
+def testdecorator(func):
+    def checkingexecutionprocess():
+        print("start initial")
+        func()
+        print("end of function")
+    return checkingexecutionprocess
+
+@testdecorator
+def calldeco():
+    print("checking this func when called")
+    
+objtestdeco = calldeco()
+objtestdeco
+
+def testdecoratoradd(func):
+    def checkaddresult(*args, **kwargs):
+        print(func.__name__)
+        result = func(*args, **kwargs)
+        print(func.__name__, "result is", result)
+        return result
+    return checkaddresult
+
+@testdecoratoradd
+def add(a,b):
+    return a+b
+
+add(4,5) # we are passing 2 arguments like wise in line  102 we should pass arguments other wise it will be error
+
+class Animal:
+    def anspeak(self):
+        print("Animal sound")
+
+class Dog(Animal):
+    def speak(self):
+        print("Bark")
+
+d = Dog()
+d.speak()
+d.anspeak()
+
+
+##########
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+#import data
+reviews = pd.read_csv("reviews.csv") 
+#print column names
+print(reviews.columns) 
+#print(reviews.dtype)
+#print .info
+print(reviews.info)
+#look at the counts of recommended
+print(reviews['recommended'].value_counts()) 
+#create binary dictionary
+binary_dict = {"True":1,"False":0} 
+#transform column
+reviews['recommended'] = reviews['recommended'].map(binary_dict)
+#print your transformed column 
+print(reviews['recommended'].value_counts()) 
+#look at the counts of rating
+print(reviews['rating'].value_counts()) 
+#create dictionary
+rating_dict = {"Loved it":5, "Liked it": 4, "Was okay" : 3, 
+"Not great": 2, "Hated it": 1}
+#transform rating column
+reviews['rating'] = reviews['rating'].map(rating_dict) 
+#print your transformed column values
+print(reviews['rating'].value_counts()) 
+#get the number of categories in a feature
+print(reviews['department_name'].value_counts())  
+#perform get_dummies
+one_hot = pd.get_dummies(reviews['department_name']) 
+#join the new columns back onto the original
+reviews = reviews.join(one_hot)
+#print column names
+print(reviews.columns)
+#transform review_date to date-time data
+reviews['review_date'] = pd.to_datetime(reviews['review_date'])
+#print review_date data type 
+print(reviews['review_date'].dtype)
+#get numerical columns
+reviews = reviews[['clothing_id', 'age', 'recommended', 
+                   'rating', 'Bottoms', 'Dresses', 
+                   'Intimate', 'Jackets', 'Tops', 'Trend']].copy() 
+#reset index
+reviews = reviews.set_index(reviews['clothing_id'])
+#instantiate standard scaler
+scaler = StandardScaler()
+#fit transform data
+scaler.fit_transform(reviews) 
+
+############################################
+
+## encapsulation
+class Animal:
+    def __init__(self, bird, carnivorus, herbivorus):
+        self.bird = bird
+        self.__carnivorus = carnivorus
+        self.__herbivorus = herbivorus
+        
+    def call_carnivorus(self):
+        print(self.__carnivorus)
+        
+    def call_herbivorus(self):
+        print(self.__herbivorus)
+        
+test = Animal("sparrow","lion","horse")
+#print(test.__herbivorus) 
+#AttributeError: 'Animal' object has no attribute '__herbivorus'. 
+# Did you mean: 'call_herbivorus'?
+# print(test.bird) #sparrow
+# test.call_carnivorus() #lion
+# test.call_herbivorus() #horse
+##inheritance
+class Vehical:
+    def __init__(self, brand):
+        self.brand = brand    
+    def call_brand(self):
+        print(self.brand)
+        
+class Car(Vehical):
+    def __init__(self, model, price, brand):
+        self.model = model
+        self.price = price
+        super().__init__(brand) # calling from parent class
+        
+    def info(self):
+        print(self.model, "brand is ", self.brand, "price is", self.price)    
+    def add_info(self, data):
+        print("additional data on",self.model, data)
+
+# test = Car("prototype",1000000,"bmw")
+# test.info() #prototype brand is  bmw price is 1000000
+# test.add_info("currently in testing phase level 3") #additional data on prototype currently in testing phase level 3
+
+#polymorphism - same method name different behaviour
+class Dog:
+    def sound(self):
+        print("bark")
+class Cat:
+    def sound(self):
+        print("meow")
+
+def make_sound(animal):
+    animal.sound()
+
+# make_sound(Dog()) #bark 
+# #make sure with dog use () otherwise it wont work
+# make_sound(Cat()) #meow
+
+#abstraction : show only the important features (what to do) and hide the internal details (how it works).
+from abc import ABC, abstractmethod
+
+class Notification(ABC):
+    @abstractmethod
+    def send(self, message):
+        raise NotImplementedError("cj=hild class must create send method")
+    
+class Email(Notification):
+    def send(self, message):
+        return f'my message is {message}'
+    
+# test = Email()
+# print(test.send("hi how are you?")) #my message is hi how are you?
+# print(test.send()) # no arg passed o/p is Email.send() missing 1 required positional argument: 'message'
+
+#
+"""
+Method Overriding (runtime polymorphism)
+Definition (simple):
+- Parent class has a method.
+- Child class defines the SAME method name (same purpose),
+  and the child's method REPLACES (overrides) the parent version.
+When you call the method using a child object, Python uses the child's method.
+"""
+class Bank:
+    def interest(self):
+        return "bank interest is 5%"     
+class sbi(Bank):
+    def interest(self):
+        return "sbi bank interest rate is 4%"
+class hdfc(Bank):
+    def interest(self):
+        return "hdfc bank interest rate is 6%"
+
+# b1 = Bank() 
+# b2= sbi()
+# b3 = hdfc()
+# print(b1.interest(), "sbi", b2.interest(), "hdfc", b3.interest())
+# #bank interest is 5% sbi sbi bank interest rate is 4% hdfc hdfc bank interest rate is 6%
+
+#method overloading : 
+'unlike java/c python does not support method overloading'
+'alternative is use default parameter with value'
+
+class MathAdd:
+    def add(self, a, b, c=0):
+        return a+b+c
+    
+test = MathAdd()
+print(test.add(1,2)) #3
+print(test.add(1,2,3)) #6
+
+
+
+s = "python"
+rev = ""
+for i in s:
+    rev = i + rev
+    print(rev)
+print(rev)
+
+
+a = "madam"
+d = s[::-1]
+print(a is d)
+print(a==d)
+
+f = [1,2,2,3,3,4,4,5,5,6,7,8]
+
+d = []
+z = []
+s = {}
+for i in f:
+    if f.count(i)>1:
+        pass
+    else:
+        d.append(i)
+        
+for i in f:
+    if i not in z:
+        z.append(i)
+    
+print(d)
+print(z)
+
+#fibnocci
+
+a = 0
+b = 1
+n = 7
+result = []
+for _ in range (7):
+    result.append(a)
+    a, b = b, a+b
+    
+print(result)
+
+
+# extract integers and count
+stringData = "10abcd2efg8hijklbsb30"
+total = 0
+result = ""
+for i in stringData:
+    if i.isdigit():
+        result += i
+        print("result1",result)
+    else:
+        if result:
+            total += int(result)
+            result = ""
+            print("result2",result)
+            print("total1",total)
+if result:
+    total += int(result)
+print("result3",result)
+print("total2", total) # 50
+
+# result1 1  # result1 10 # result2 # total1 10 # result1 2 # result2 # total1 12 
+# # result1 8 # result2 # total1 20 # result1 3 # result1 30 # result3 30 # total2 50
+
+import re
+s = "10abcd2werf30dgxf8"
+total = sum(map(int, re.findall(r"\d+", s)))
+
+print(total) #50
+
+import re
+
+s = "10abcd2werf30dgxf8"
+matches = re.findall(r"\d+", s)
+nums = list(map(int, matches))
+total = sum(nums)
+
+print("matches:", matches) # matches: ['10', '2', '30', '8']
+print("nums:", nums)  # nums: [10, 2, 30, 8]
+print("total:", total) #total: 50
+
+
+teststr = "abc def hij/klm"
+rev = ""
+
+for i in teststr:
+    rev = i + rev
+print("202 :",rev)
+
+
+
+str1 = " a b c d e "
+print("strip", str1.strip())  #strip a b c d e
+print("split()",str1.split()) #split() ['a', 'b', 'c', 'd', 'e']
+print("split(' ')",str1.split(" ")) # split(' ') ['', 'a', 'b', 'c', 'd', 'e', '']
+#print("split('')",str1.split("")) #ValueError: empty separator
+
+#strip() removes whitespace only from start/end
+#split() without argument collapses consecutive whitespace
+# split(" ") splits on single-space exactly, so it includes empty strings
+
+
+
+
